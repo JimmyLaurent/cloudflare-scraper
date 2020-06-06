@@ -1,0 +1,30 @@
+{
+  "name": "cloudflare-scraper",
+  "version": "0.1.0",
+  "description": "A package to bypass Cloudflare's protection",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "cloudflare",
+    "scraper",
+    "bypass",
+    "puppeteer",
+    "request",
+    "anti-bot"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^3.3.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "parser": "flow",
+    "semi": true,
+    "tabWidth": 2
+  }
+}
