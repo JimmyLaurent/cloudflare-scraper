@@ -1,4 +1,6 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
 async function getCookies(url) {
   let options = {
@@ -11,11 +13,8 @@ async function getCookies(url) {
   };
 
   const browser = await puppeteer.launch(options);
-  const page = await browser.newPage();
-  await page.evaluateOnNewDocument(() => {
-    delete navigator.__proto__.webdriver;
-  });
-
+	const page = await browser.newPage();
+	
   let response = await page.goto(url, {
     timeout: 45000,
     waitUntil: 'domcontentloaded'
