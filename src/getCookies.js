@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 async function getCookies(url) {
   let options = {
-    headless: false,
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
