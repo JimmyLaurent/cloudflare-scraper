@@ -8,6 +8,21 @@ Puppeteer (chromium headless) is used to retrieve cloudflare cookies then reques
 npm install cloudflare-scraper
 ```
 
+## Quick Example
+
+```js
+const cloudfareScraper = require("cloudflare-scraper");
+
+(async () => {
+  try {
+    const response = await cloudfareScraper.get('https://cloudflare-url.com');
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+})();
+```
+
 ## API
 
 TODO (same api as request package)
