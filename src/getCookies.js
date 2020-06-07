@@ -24,7 +24,7 @@ async function getCookies(url) {
     });
     let count = 0;
     let content = await page.content();
-    while (content.includes("cf-browser-verification")) {
+    while (content.includes('cf-browser-verification')) {
       response = await page.waitForNavigation({
         timeout: 45000,
         waitUntil: 'domcontentloaded'
@@ -34,8 +34,8 @@ async function getCookies(url) {
       if (count === 10) {
         throw new Error('timeout on just a moment');
       }
-		}
-		const title = await page.title();
+    }
+    const title = await page.title();
     if (title === 'Attention Required! | Cloudflare') {
       throw new Error('Captcha error');
     }
