@@ -11,7 +11,7 @@ npm install cloudflare-scraper
 ## Quick Example
 
 ```js
-const cloudfareScraper = require("cloudflare-scraper");
+const cloudfareScraper = require('cloudflare-scraper');
 
 (async () => {
   try {
