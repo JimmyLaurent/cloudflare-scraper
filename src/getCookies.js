@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+const getUserAgent = require('./getUserAgent');
 puppeteer.use(StealthPlugin());
 
 const { PUPPETEER_HEADLESS = 'true' } = process.env;
@@ -10,7 +11,7 @@ async function getCookies(url) {
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
-      '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
+      '--user-agent=' + getUserAgent()
     ]
   };
 

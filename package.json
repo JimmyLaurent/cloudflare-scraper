@@ -1,6 +1,6 @@
 {
   "name": "cloudflare-scraper",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A package to bypass Cloudflare's protection",
   "main": "index.js",
   "scripts": {},

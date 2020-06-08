@@ -1,10 +1,9 @@
 const request = require('request-promise');
 const { Cookie } = require('tough-cookie');
+const getUserAgent = require('./src/getUserAgent');
 const getCookies = require('./src/getCookies');
 
 const DEFAULT_EXPIRATION_TIME_IN_SECONDS = 3000;
-const USER_AGENT =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36';
 
 function convertCookieToTough(cookie) {
   const { name, value, expires, domain, path } = cookie;
@@ -32,7 +31,7 @@ async function fillCookiesJar(jar, url) {
 }
 
 async function cloudlareScraper({ jar, url, uri, ...rest }) {
-	const targetUrl = uri || url;
+  const targetUrl = uri || url;
   const cookies = jar.getCookies(targetUrl);
   const clearanceCookie = cookies.find((c) => c.key === 'cf_clearance');
   if (!clearanceCookie || clearanceCookie.expires < Date.now()) {
@@ -48,7 +47,7 @@ async function cloudlareScraper({ jar, url, uri, ...rest }) {
 
 const defaultParams = {
   jar: request.jar(),
-  headers: { 'User-Agent': USER_AGENT },
+  headers: { 'User-Agent': getUserAgent() },
   gzip: true
 };
 
