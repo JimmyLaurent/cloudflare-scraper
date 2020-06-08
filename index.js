@@ -1,4 +1,4 @@
-const request = require('request-promise');
+const request = require('request-promise-native');
 const { Cookie } = require('tough-cookie');
 const getUserAgent = require('./src/getUserAgent');
 const getCookies = require('./src/getCookies');
@@ -30,19 +30,24 @@ async function fillCookiesJar(jar, url) {
   return jar;
 }
 
-async function cloudlareScraper({ jar, url, uri, ...rest }) {
+async function cloudlareScraper(options) {
+	const { jar, url, uri } = options;
+
   const targetUrl = uri || url;
-  const cookies = jar.getCookies(targetUrl);
+	const cookies = jar.getCookies(targetUrl);
+
   const clearanceCookie = cookies.find((c) => c.key === 'cf_clearance');
   if (!clearanceCookie || clearanceCookie.expires < Date.now()) {
+    try {
+      return await request(options);
+    } catch (e) {
+      if (e.statusCode !== 503 || e.response.headers.server !== 'cloudflare') {
+        throw e;
+      }
+    }
     await fillCookiesJar(jar, targetUrl);
   }
-
-  return request({
-    uri: targetUrl,
-    jar,
-    ...rest
-  });
+  return request(options);
 }
 
 const defaultParams = {

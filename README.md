@@ -11,11 +11,11 @@ npm install cloudflare-scraper
 ## Quick Example
 
 ```js
-const cloudfareScraper = require('cloudflare-scraper');
+const cloudflareScraper = require('cloudflare-scraper');
 
 (async () => {
   try {
-    const response = await cloudfareScraper.get('https://cloudflare-url.com');
+    const response = await cloudflareScraper.get('https://cloudflare-url.com');
     console.log(response);
   } catch (error) {
     console.log(error);
@@ -31,3 +31,4 @@ TODO (same api as request package)
 
 - improve stealth
 - proxy support
+- retry ?
