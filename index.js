@@ -1,53 +1,36 @@
 const request = require('request-promise-native');
-const { Cookie } = require('tough-cookie');
+const { isProtectedByStormwall, getStormwallCookie } = require('stormwall-bypass');
 const getUserAgent = require('./src/getUserAgent');
-const getCookies = require('./src/getCookies');
+const fillCookiesJar = require('./src/fillCookiesJar');
 
-const DEFAULT_EXPIRATION_TIME_IN_SECONDS = 3000;
-
-function convertCookieToTough(cookie) {
-  const { name, value, expires, domain, path } = cookie;
-  const isExpiresValid = expires && typeof expires === 'number';
-
-  const expiresDate = isExpiresValid
-    ? new Date(expires * 1000)
-    : new Date(Date.now() + DEFAULT_EXPIRATION_TIME_IN_SECONDS * 1000);
-
-  return new Cookie({
-    key: name,
-    value,
-    expires: expiresDate,
-    domain: domain.startsWith('.') ? domain.substring(1) : domain,
-    path
-  });
+function isCloudflareIUAMError(error) {
+  return error.response.body.includes('cf-browser-verification');
 }
 
-async function fillCookiesJar(jar, url) {
-  const cookies = await getCookies(url);
-  for (let cookie of cookies) {
-    jar.setCookie(convertCookieToTough(cookie), url);
+async function handleError(error) {
+  if (isCloudflareIUAMError(error)) {
+    const { options } = error;
+    await fillCookiesJar(request, options);
+    return request(options);
   }
-  return jar;
+  throw error;
 }
 
-async function cloudlareScraper(options) {
-	const { jar, url, uri } = options;
-
+function handleResponse(response, options) {
+  const { jar, url, uri } = options;
   const targetUrl = uri || url;
-	const cookies = jar.getCookies(targetUrl);
-
-  const clearanceCookie = cookies.find((c) => c.key === 'cf_clearance');
-  if (!clearanceCookie || clearanceCookie.expires < Date.now()) {
-    try {
-      return await request(options);
-    } catch (e) {
-      if (e.statusCode !== 503 || e.response.headers.server !== 'cloudflare') {
-        throw e;
-      }
-    }
-    await fillCookiesJar(jar, targetUrl);
+  const body = response.body || response;
+  if (isProtectedByStormwall(body)) {
+    const cookie = getStormwallCookie(body);
+    jar.setCookie(cookie, targetUrl);
+    return request(options);
   }
-  return request(options);
+  return response;
+}
+
+async function cloudflareScraper(options) {
+  const response = await request({ ...options }).catch(handleError);
+  return handleResponse(response, options);
 }
 
 const defaultParams = {
@@ -56,4 +39,4 @@ const defaultParams = {
   gzip: true
 };
 
-module.exports = request.defaults(defaultParams, cloudlareScraper);
+module.exports = request.defaults(defaultParams, cloudflareScraper);
