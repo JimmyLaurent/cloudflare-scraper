@@ -1,4 +1,3 @@
-
 function extract(string, regexp, errorMessage) {
   const match = string.match(regexp);
   if (match) {
@@ -9,4 +8,12 @@ function extract(string, regexp, errorMessage) {
   }
 }
 
-module.exports = { extract };
+function isCloudflareJSChallenge(body) {
+  return body.includes('cf-browser-verification');
+}
+
+function isCloudflareCaptchaChallenge(body) {
+  return body.includes('cf_captcha_kind');
+}
+
+module.exports = { extract, isCloudflareJSChallenge, isCloudflareCaptchaChallenge };

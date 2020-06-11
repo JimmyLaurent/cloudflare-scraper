@@ -3,6 +3,7 @@ const { Cookie } = require('tough-cookie');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const getUserAgent = require('./getUserAgent');
 const handleCaptcha = require('./handleCaptcha');
+const { isCloudflareJSChallenge, isCloudflareCaptchaChallenge } = require('./utils');
 
 puppeteer.use(StealthPlugin());
 
@@ -51,20 +52,23 @@ async function fillCookiesJar(request, options) {
 
     let count = 1;
     let content = await page.content();
-    while (content.includes('cf-browser-verification')) {
-      response = await page.waitForNavigation({
-        timeout: 45000,
-        waitUntil: 'domcontentloaded'
-      });
-      content = await page.content();
-      if (count++ === 10) {
-        throw new Error('timeout on just a moment');
-      }
-    }
-
-    content = await page.content();
-    if (content.includes('cf_captcha_kind')) {
+    if (isCloudflareCaptchaChallenge(content)) {
       await handleCaptcha(content, request, options);
+    }
+    else {
+      while (isCloudflareJSChallenge(content)) {
+        response = await page.waitForNavigation({
+          timeout: 45000,
+          waitUntil: 'domcontentloaded'
+        });
+        content = await page.content();
+        if (count++ === 10) {
+          throw new Error('timeout on just a moment');
+        }
+      }
+      if (isCloudflareCaptchaChallenge(content)) {
+        await handleCaptcha(content, request, options);
+      }
     }
 
     const cookies = await page.cookies();

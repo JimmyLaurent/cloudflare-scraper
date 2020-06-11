@@ -2,9 +2,11 @@ const request = require('request-promise-native');
 const { isProtectedByStormwall, getStormwallCookie } = require('stormwall-bypass');
 const getUserAgent = require('./src/getUserAgent');
 const fillCookiesJar = require('./src/fillCookiesJar');
+const { isCloudflareJSChallenge, isCloudflareCaptchaChallenge } = require('./src/utils');
 
 function isCloudflareIUAMError(error) {
-  return error.response.body.includes('cf-browser-verification');
+  const { body } = error.response;
+  return isCloudflareJSChallenge(body) || isCloudflareCaptchaChallenge(body);
 }
 
 async function handleError(error) {
