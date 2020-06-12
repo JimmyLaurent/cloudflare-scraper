@@ -1,12 +1,15 @@
 const request = require('request-promise-native');
 const { isProtectedByStormwall, getStormwallCookie } = require('stormwall-bypass');
-const getUserAgent = require('./src/getUserAgent');
+const { getUserAgent } = require('./src/utils');
 const fillCookiesJar = require('./src/fillCookiesJar');
 const { isCloudflareJSChallenge, isCloudflareCaptchaChallenge } = require('./src/utils');
 
 function isCloudflareIUAMError(error) {
-  const { body } = error.response;
-  return isCloudflareJSChallenge(body) || isCloudflareCaptchaChallenge(body);
+  if (error.response) {
+    const { body } = error.response;
+    return isCloudflareJSChallenge(body) || isCloudflareCaptchaChallenge(body);
+  }
+  return false;
 }
 
 async function handleError(error) {

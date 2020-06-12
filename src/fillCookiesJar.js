@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer-extra');
 const { Cookie } = require('tough-cookie');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-const getUserAgent = require('./getUserAgent');
+const { getUserAgent } = require('./utils');
 const handleCaptcha = require('./handleCaptcha');
 const { isCloudflareJSChallenge, isCloudflareCaptchaChallenge } = require('./utils');
 
