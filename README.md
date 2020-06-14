@@ -5,7 +5,7 @@ Puppeteer (chromium headless) is used to retrieve cloudflare cookies then reques
 ## Install
 
 ```bash
-npm install cloudflare-scraper
+npm install cloudflare-scraper puppeteer
 ```
 
 ## Extra Features

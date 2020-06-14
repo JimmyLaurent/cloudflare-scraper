@@ -1,13 +1,7 @@
-const puppeteer = require('puppeteer-extra');
+const createBrowser = require('./createBrowser');
 const { Cookie } = require('tough-cookie');
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-const { getUserAgent } = require('./utils');
 const handleCaptcha = require('./handleCaptcha');
 const { isCloudflareJSChallenge, isCloudflareCaptchaChallenge } = require('./utils');
-
-puppeteer.use(StealthPlugin());
-
-const { PUPPETEER_HEADLESS = 'true', PUPPETEER_IGNORE_HTTPS_ERROR = 'false' } = process.env;
 const DEFAULT_EXPIRATION_TIME_IN_SECONDS = 3000;
 
 function convertCookieToTough(cookie) {
@@ -28,21 +22,10 @@ function convertCookieToTough(cookie) {
 }
 
 async function fillCookiesJar(request, options) {
-  const puppeteerOptions = {
-    headless: PUPPETEER_HEADLESS === 'true',
-    ignoreHTTPSErrors: PUPPETEER_IGNORE_HTTPS_ERROR === 'true',
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--user-agent=' + getUserAgent()]
-  };
-
-  const { HTTP_PROXY, HTTPS_PROXY } = process.env;
   let { proxy, jar, url, uri } = options;
   url = url || uri;
-  proxy = proxy || HTTP_PROXY || HTTPS_PROXY;
-  if (proxy) {
-    puppeteerOptions.args.push(`--proxy-server=${proxy}`);
-  }
 
-  const browser = await puppeteer.launch(puppeteerOptions);
+  const browser = await createBrowser({ proxy });
   try {
     const page = await browser.newPage();
     let response = await page.goto(url, {
@@ -54,8 +37,7 @@ async function fillCookiesJar(request, options) {
     let content = await page.content();
     if (isCloudflareCaptchaChallenge(content)) {
       await handleCaptcha(content, request, options);
-    }
-    else {
+    } else {
       while (isCloudflareJSChallenge(content)) {
         response = await page.waitForNavigation({
           timeout: 45000,
