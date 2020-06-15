@@ -32,7 +32,7 @@ puppeteer.use(stealth);
 async function createBrowser({ proxy = HTTP_PROXY || HTTPS_PROXY }) {
   const args = ['--no-sandbox', '--disable-setuid-sandbox', '--user-agent=' + getUserAgent()];
   if (proxy) {
-    commonArgs.push(`--proxy-server=${proxy}`);
+    args.push(`--proxy-server=${proxy}`);
   }
 
   let puppeteerOptions = {
