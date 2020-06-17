@@ -22,10 +22,10 @@ function convertCookieToTough(cookie) {
 }
 
 async function fillCookiesJar(request, options) {
-  let { proxy, jar, url, uri } = options;
+  let { jar, url, uri } = options;
   url = url || uri;
 
-  const browser = await createBrowser({ proxy });
+  const browser = await createBrowser(options);
   try {
     const page = await browser.newPage();
     let response = await page.goto(url, {

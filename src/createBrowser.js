@@ -29,7 +29,14 @@ const puppeteer = addExtra(puppeteerCore);
 const stealth = StealthPlugin();
 puppeteer.use(stealth);
 
-async function createBrowser({ proxy = HTTP_PROXY || HTTPS_PROXY }) {
+async function createBrowser(options) {
+  const { proxy = HTTP_PROXY || HTTPS_PROXY, browserWSEndpoint, browserUrl } = options;
+  const ignoreHTTPSErrors = PUPPETEER_IGNORE_HTTPS_ERROR === 'true';
+
+  if (browserWSEndpoint || browserUrl) {
+    return puppeteer.connect({ browserWSEndpoint, browserUrl, ignoreHTTPSErrors });
+  }
+
   const args = ['--no-sandbox', '--disable-setuid-sandbox', '--user-agent=' + getUserAgent()];
   if (proxy) {
     args.push(`--proxy-server=${proxy}`);
@@ -37,7 +44,7 @@ async function createBrowser({ proxy = HTTP_PROXY || HTTPS_PROXY }) {
 
   let puppeteerOptions = {
     headless: PUPPETEER_HEADLESS === 'true',
-    ignoreHTTPSErrors: PUPPETEER_IGNORE_HTTPS_ERROR === 'true',
+    ignoreHTTPSErrors,
     args
   };
 
