@@ -55,7 +55,7 @@ async function handleCaptcha(content, request, options) {
       ...options,
       method: 'POST',
       simple: false,
-      uri: href,
+      uri: href.replace('&amp;', '&'),
       headers: {
         ...options.headers,
         'content-type': 'application/x-www-form-urlencoded'
