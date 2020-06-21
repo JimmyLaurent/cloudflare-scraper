@@ -58,6 +58,9 @@ async function createBrowser(options) {
     };
   }
 
+  // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
+  puppeteerOptions.executablePath = puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked');
+  
   return await puppeteer.launch(puppeteerOptions);
 }
 
