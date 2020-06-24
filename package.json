@@ -1,6 +1,6 @@
 {
   "name": "cloudflare-scraper",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A package to bypass Cloudflare's protection",
   "author": "Jimmy Laurent",
   "repository": {
@@ -19,7 +19,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "hcaptcha-solver": "^1.0.0",
+    "hcaptcha-solver": "^1.0.1",
     "puppeteer-extra": "^3.1.9",
     "puppeteer-extra-plugin-stealth": "^2.4.9",
     "request": "^2.88.2",
