@@ -2,7 +2,7 @@ const { URL } = require('url');
 const { extract } = require('./utils');
 const solvehCaptcha = require('hcaptcha-solver');
 
-const SITE_KEY_REGEXP = /sitekey="([^"]+)/;
+const SITE_KEY_REGEXP = /sitekey=([^"]+)/;
 const CHALLENGE_FORM_ACTION_REGEXP = /id="challenge-form" action="([^"]+)/;
 const CHALLENGE_FORM_REGEXP = /<form class="challenge-form[^>]*>([\s\S]*?)<\/form>/;
 const INPUT_REGEXP = /<\s*input(.*?)[^>]*>/gm;
