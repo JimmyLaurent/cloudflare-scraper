@@ -35,22 +35,19 @@ async function fillCookiesJar(request, options) {
 
     let count = 1;
     let content = await page.content();
+
+    while (isCloudflareJSChallenge(content)) {
+      response = await page.waitForNavigation({
+        timeout: 45000,
+        waitUntil: 'domcontentloaded'
+      });
+      content = await page.content();
+      if (count++ === 100) {
+        throw new Error('timeout on just a moment');
+      }
+    }
     if (isCloudflareCaptchaChallenge(content)) {
       await handleCaptcha(content, request, options);
-    } else {
-      while (isCloudflareJSChallenge(content)) {
-        response = await page.waitForNavigation({
-          timeout: 45000,
-          waitUntil: 'domcontentloaded'
-        });
-        content = await page.content();
-        if (count++ === 10) {
-          throw new Error('timeout on just a moment');
-        }
-      }
-      if (isCloudflareCaptchaChallenge(content)) {
-        await handleCaptcha(content, request, options);
-      }
     }
 
     const cookies = await page.cookies();

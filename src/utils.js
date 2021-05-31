@@ -27,7 +27,7 @@ function extract(string, regexp, errorMessage) {
 }
 
 function isCloudflareJSChallenge(body) {
-  return body.includes('cf-browser-verification');
+  return body.includes('managed_checking_msg');
 }
 
 function isCloudflareCaptchaChallenge(body) {
