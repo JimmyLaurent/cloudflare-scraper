@@ -30,7 +30,7 @@ async function fillCookiesJar(request, options) {
     const page = await browser.newPage();
     let response = await page.goto(url, {
       timeout: 45000,
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'networkidle0'
     });
 
     let count = 1;
