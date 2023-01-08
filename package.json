@@ -1,6 +1,6 @@
 {
   "name": "cloudflare-scraper",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "description": "A package to bypass Cloudflare's protection",
   "author": "Jimmy Laurent",
   "repository": {
@@ -8,26 +8,24 @@
     "url": "git://github.com/JimmyLaurent/cloudflare-scraper.git"
   },
   "main": "index.js",
+  "type": "module",
   "scripts": {},
   "keywords": [
     "cloudflare",
     "scraper",
     "bypass",
-    "puppeteer",
+    "chrome",
     "request",
     "anti-bot"
   ],
   "license": "MIT",
   "dependencies": {
-    "hcaptcha-solver": "^1.0.1",
-    "puppeteer-extra": "^3.1.18",
-    "puppeteer-extra-plugin-stealth": "^2.7.8",
-    "request": "^2.88.2",
-    "request-promise-native": "^1.0.8",
-    "stormwall-bypass": "^1.0.1"
-  },
-  "devDependencies": {
-    "puppeteer": "^5.2.1"
+    "chrome-launcher": "^0.15.1",
+    "chrome-remote-interface": "^0.31.3",
+    "chromium": "^3.0.3",
+    "got": "^12.5.3",
+    "tough-cookie": "^4.1.2",
+    "xvfb": "^0.4.0"
   },
   "prettier": {
     "printWidth": 100,

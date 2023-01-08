@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © `2020` `Jimmy Laurent`
+Copyright © `2023` `Jimmy Laurent`
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
